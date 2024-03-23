@@ -1,0 +1,5 @@
+.vscode
+.vs
+/store
+/front/.npm
+/generated-api

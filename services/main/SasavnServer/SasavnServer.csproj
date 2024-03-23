@@ -1,0 +1,90 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <UserSecretsId>b93a2af4-f425-4ab3-a7b4-1f73bba7d662</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileFastModeStage>base</DockerfileFastModeStage>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <DockerDevelopmentMode>Regular</DockerDevelopmentMode>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>False</UseWindowsForms>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+	  <Protobuf Include="ProtoTypes\logs.proto" />
+	  <Protobuf Include="ProtoTypes\changelogs.proto" GrpcServices="Server" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="BouncyCastle.Cryptography">
+      <Aliases>BouncyCastle</Aliases>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AspNet.Security.OAuth.Discord" Version="7.0.4" />
+    <PackageReference Include="AspNet.Security.OAuth.QQ" Version="7.0.4" />
+    <PackageReference Include="AspNet.Security.OAuth.Vkontakte" Version="7.0.4" />
+    <PackageReference Include="AspNet.Security.OpenId.Steam" Version="7.0.0" />
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.2.1" />
+    <PackageReference Include="Discord.Net" Version="3.12.0" />
+    <PackageReference Include="FluffySpoon.AspNet.EncryptWeMust" Version="1.171.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.24.4" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.57.0" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.57.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.58.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNet.SignalR" Version="2.4.3" />
+    <PackageReference Include="Microsoft.AspNet.SignalR.Core" Version="2.4.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="7.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="7.0.11" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
+    <PackageReference Include="MimeKit" Version="4.2.0" />
+    <PackageReference Include="morelinq" Version="3.4.2" />
+    <PackageReference Include="MySqlConnector" Version="2.2.7" />
+    <PackageReference Include="NETCore.MailKit" Version="2.1.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NSwag.ApiDescription.Client" Version="13.20.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="NSwag.AspNetCore" Version="13.20.0" />
+    <PackageReference Include="NSwag.MSBuild" Version="13.20.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Owin.Security.Providers.Discord" Version="2.26.0" />
+    <PackageReference Include="Owin.Security.Providers.OpenID" Version="2.26.0" />
+    <PackageReference Include="Owin.Security.Providers.Steam" Version="2.26.0" />
+    <PackageReference Include="Owin.Security.Providers.VKontakte" Version="2.26.0" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
+    <PackageReference Include="RecaptchaNet" Version="3.1.0" />
+    <PackageReference Include="Serilog.Extensions.Logging.File" Version="3.0.0" />
+    <PackageReference Include="SixLabors.ImageSharp.Web" Version="3.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+  <Target Name="json" AfterTargets="Build">
+    <Copy SourceFiles="./appsettings.Production.json" DestinationFiles="$(OutDir)appsettings.json" />
+  </Target>
+
+	<PropertyGroup>
+		<DefineConstants>$(DefineConstants);BUILD_API</DefineConstants>
+	</PropertyGroup>
+
+	<Target Name="Generate OpenAPI" AfterTargets="Build" Condition="'$(BUILD_API)' != ''">
+		<Exec Command="dotnet tool restore"></Exec>
+		<Exec Command="dotnet swagger tofile --output ./openapi.g/openapi.yaml --yaml $(OutputPath)$(AssemblyName).dll v1" WorkingDirectory="$(ProjectDir)"></Exec>
+		<Exec Command="dotnet swagger tofile --output ./openapi.g/openapi.json $(OutputPath)$(AssemblyName).dll v1" WorkingDirectory="$(ProjectDir)"></Exec>
+	</Target>
+  
+  
+</Project>

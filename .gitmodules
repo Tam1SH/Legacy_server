@@ -1,0 +1,8 @@
+
+[submodule "services/main/SasavnServer/ProtoTypes"]
+	path = services/main/SasavnServer/ProtoTypes
+	url = https://github.com/SasavnInc/ProtoTypes
+[submodule "services/logs/ProtoTypes"]
+	path = services/logs/ProtoTypes
+	url = https://github.com/SasavnInc/ProtoTypes
+

@@ -1,0 +1,40 @@
+version: "3.8"
+
+volumes:
+  store:
+    external: true
+
+  db_logs:
+    external: true
+
+legacy:
+  main:
+    container_name: main
+    restart: always
+    volumes:
+      - store:/store
+      - db_logs:/surrealDB
+    ports:
+      - 1448:1448
+      - 1337:80
+      - 5000:5000
+    networks:
+      - legacy
+
+  surrealdb:
+    container_name: surrealdb
+    volumes:
+      - db_logs:/surrealDB
+    user: root
+    ports:
+      - 8000:8000
+    networks:
+      - legacy
+
+networks:
+
+  legacy:
+    driver: bridge
+    ipam:
+      driver: default
+      

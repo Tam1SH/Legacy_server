@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+
+  main:
+    
+    image: mcr.microsoft.com/dotnet/sdk:7.0
+    volumes:
+      - ./services/main/SasavnServer/:/app
+
+    working_dir: /app
+    command: dotnet watch run --urls http://*:80 http://*:1448
+
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+
+  surrealdb_test:
+    container_name: surrealdb_test
+    user: root
+    ports:
+      - 8001:8000
+    networks:
+      - services
+
+    build:
+      dockerfile: docker-images/surrealdb/Dockerfile.Mock
+
+  surrealdb:
+    build:
+      dockerfile: docker-images/surrealdb/Dockerfile.Debug
